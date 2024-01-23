@@ -7,9 +7,14 @@ import { ReactComponent as MaticIcon } from 'cryptocurrency-icons/svg/color/mati
 import { ReactComponent as EthIcon } from 'cryptocurrency-icons/svg/color/eth.svg';
 import { ReactComponent as DogeIcon } from 'cryptocurrency-icons/svg/color/doge.svg';
 
-import { BiTimer, BiCopy, BiErrorAlt } from 'react-icons/bi';
-import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
-import { HiInformationCircle } from 'react-icons/hi';
+
+const BiTimer = () => <span>&#9201;</span>; // Unicode character for a clock symbol
+const BiCopy = () => <span>&#169;</span>; // Unicode character for copyright symbol
+const BiErrorAlt = () => <span>&#9888;</span>; // Unicode character for warning symbol
+const FiChevronUp = () => <span>&#9650;</span>; // Unicode character for an upward-pointing triangle
+const FiChevronDown = () => <span>&#9660;</span>; // Unicode character for a downward-pointing triangle
+const HiInformationCircle = () => <span>&#9432;</span>; // Unicode character for information symbol
+
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import clsx from 'clsx';
@@ -56,11 +61,11 @@ export default function Invoice() {
         setCurrency(_currency as AvailableCurrencies);
 
         // eslint-disable-next-line prefer-const
-        let interval: NodeJS.Timer;
+        let interval: NodeJS.Timeout;
         async function runner() {
             const _invoiceObj = (await fGet(`/getInvoiceStatus?invoiceId=${_invoiceId}`)) as IInvoiceObject;
             if ('error' in _invoiceObj) {
-                setPaymentMajorError(_invoiceObj['error']);
+                setPaymentMajorError(_invoiceObj['error'] as string);
                 clearInterval(interval);
                 return;
             }
@@ -89,7 +94,7 @@ export default function Invoice() {
     if (paymentMajorError) {
         return (
             <div className='flex justify-center items-center flex-col h-[100vh] pb-10'>
-                <BiErrorAlt className='text-red-600' size={54} />
+                <BiErrorAlt/>
                 <p className='text-red-600 font-semibold text-lg mt-2 tracking-tight'>{paymentMajorError}</p>
             </div>
         );
@@ -192,7 +197,7 @@ export default function Invoice() {
                             <b>Expires</b>
                         </p>
                         <p className='flex items-center text-slate-600 tracking-tight'>
-                            <BiTimer size={20} className='mr-1' />
+                            <BiTimer/>
                             {formatExpiresAtTime(invoiceObject.expiresAt)}
                         </p>
                     </div>
@@ -206,7 +211,7 @@ export default function Invoice() {
                         onClick={(_) => setIsBlockchainInfoOpen((prev) => !prev)}
                     >
                         <p className='font-bold'>Blockchain Details</p>
-                        {isBlockchainInfoOpen ? <FiChevronUp size={20} /> : <FiChevronDown size={20} />}
+                        {isBlockchainInfoOpen ? <FiChevronUp/> : <FiChevronDown/>}
                     </div>
                     <div
                         className={clsx(
@@ -236,7 +241,7 @@ export default function Invoice() {
                                 )}
                                 onClick={(_) => !isTransactionDead && copyToClipboard('' + invoiceObject.amount, 'Copied value to clipboard')}
                             >
-                                {invoiceObject.amount} {currency} {!isTransactionDead && <BiCopy className='inline-block mb-1' size={16} />}
+                                {invoiceObject.amount} {currency} {!isTransactionDead && <BiCopy/>}
                             </p>
                         </div>
                         <div className='h-[1px] bg-slate-200 my-5 mx-5'></div>
@@ -250,7 +255,7 @@ export default function Invoice() {
                                 onClick={(_) => !isTransactionDead && copyToClipboard(invoiceObject.publicKey, 'Copied address to clipboard')}
                             >
                                 {invoiceObject.publicKey}
-                                {!isTransactionDead && <BiCopy className='ml-0.5 mb-[1px] inline-block' size={12} />}
+                                {!isTransactionDead && <BiCopy/>}
                             </p>
                         </div>
                         <div className='text-center px-4 mt-6 alert-root'>
@@ -283,7 +288,7 @@ export default function Invoice() {
                                 }
                             >
                                 {(invoiceObject.amount - invoiceObject.amountPaid).toFixed(7)} {currency}{' '}
-                                {!isTransactionDead && <BiCopy className='inline-block mb-1' size={15} />}
+                                {!isTransactionDead && <BiCopy/>}
                             </p>
                         </div>
                     </div>
